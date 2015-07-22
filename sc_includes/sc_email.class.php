@@ -3,9 +3,9 @@
 /**
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
-* @link      http://www.secondversion.com
-* @version   1.0.9
-* @copyright (C) 2005 - 2014 Eric Sizemore
+* @link      http://www.secondversion.com/downloads/
+* @version   1.0.10
+* @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
 *	SV's Simple Contact is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 if (!defined('IN_SC'))
 {
-	die('You\'re not supposed to be here.');
+	die('You are not supposed to be here.');
 }
 
 /**

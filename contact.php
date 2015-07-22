@@ -3,9 +3,9 @@
 /**
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
-* @link      http://www.secondversion.com
-* @version   1.0.9
-* @copyright (C) 2005 - 2014 Eric Sizemore
+* @link      http://www.secondversion.com/downloads/
+* @version   1.0.10
+* @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
 *	SV's Simple Contact is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 */
 
 define('IN_SC', true);
-require_once('./sc_includes/sc_global.php');
+require_once './sc_includes/sc_global.php';
 
 // Session so our captcha will work
 session_start();
@@ -32,9 +32,10 @@ session_start();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>SV's Simple Contact Form 1.0.8</title>
+<title>SV's Simple Contact Form</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Language" content="en" />
+<meta name="simple_contact_version" content="1.0.10" />
 <script type="text/javascript" language="JavaScript">
 <!--
 function sc_validate_form()
@@ -113,8 +114,8 @@ $result = '';
 // Process the form and send the email..
 if (!empty($_POST['submit']))
 {
-	$name = sc_sanitize($_POST['sender_name']);
-	$email = sc_sanitize($_POST['sender_email']);
+	$name    = sc_sanitize($_POST['sender_name']);
+	$email   = sc_sanitize($_POST['sender_email']);
 	$message = str_replace("\r\n", "\n", $_POST['sender_message']);
 	$message = wordwrap(sc_sanitize($message, false), $sc_config['msg_word_wrap']);
 
@@ -159,7 +160,7 @@ if (!empty($_POST['submit']))
 	}
 	else
 	{
-		require_once('./sc_includes/sc_email.class.php');
+		require_once './sc_includes/sc_email.class.php';
 		$emailer = new emailer($sc_config['to_email'], $email, $sc_config['subject']);
 		$emailer->use_template(array(
 			'name'    => $name,

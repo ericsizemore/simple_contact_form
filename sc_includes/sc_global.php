@@ -3,9 +3,9 @@
 /**
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
-* @link      http://www.secondversion.com
-* @version   1.0.9
-* @copyright (C) 2005 - 2014 Eric Sizemore
+* @link      http://www.secondversion.com/downloads/
+* @version   1.0.10
+* @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
 *	SV's Simple Contact is free software: you can redistribute it and/or modify
@@ -23,12 +23,18 @@
 
 if (!defined('IN_SC'))
 {
-	die('You\'re not supposed to be here.');
+	die('You are not supposed to be here.');
 }
 
 // ################################################################
 // Error reporting
 error_reporting(E_ALL & ~E_NOTICE & ~8192);
+
+// Check PHP version
+if (!version_compare(PHP_VERSION, '5.2', '>='))
+{
+	die('PHP 5.2 or greater is required, you are currently running PHP ' . PHP_VERSION);
+}
 
 // Better to be safe than sorry... :)
 if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS']))
@@ -39,16 +45,7 @@ if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS']))
 // Reverse the effects of register_globals if neccessary.
 if (ini_get('register_globals') OR strtolower(ini_get('register_globals')) == 'on')
 {
-	$supers = array(
-		'_GET',
-		'_POST',
-		'_COOKIE',
-		'_REQUEST',
-		'_SERVER',
-		'_SESSION',
-		'_ENV',
-		'_FILES'
-	);
+	$supers = array('_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_SESSION', '_ENV', '_FILES');
 
 	if (!isset($_SESSION) OR !is_array($_SESSION))
 	{
@@ -69,12 +66,7 @@ if (ini_get('register_globals') OR strtolower(ini_get('register_globals')) == 'o
 }
 
 // ################################################################
-// Check PHP version
-if (!version_compare(PHP_VERSION, '5.2', '>='))
-{
-	die('PHP 5.2 or greater is required, you\'re currently running PHP ' . PHP_VERSION);
-}
 
 // Include needed files
-require_once('sc_config.php');
-require_once('sc_functions.php');
+require_once 'sc_config.php';
+require_once 'sc_functions.php';

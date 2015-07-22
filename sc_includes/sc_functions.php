@@ -3,9 +3,9 @@
 /**
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
-* @link      http://www.secondversion.com
-* @version   1.0.9
-* @copyright (C) 2005 - 2014 Eric Sizemore
+* @link      http://www.secondversion.com/downloads/
+* @version   1.0.10
+* @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
 *	SV's Simple Contact is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 if (!defined('IN_SC'))
 {
-	die('You\'re not supposed to be here.');
+	die('You are not supposed to be here.');
 }
 
 /**
@@ -33,28 +33,18 @@ if (!defined('IN_SC'))
 * @param  boolean Strip \r\n ?
 * @return string
 */
-function sc_sanitize($value, $strip_crlf = true)
+function sanitize($value, $strip_crlf = true)
 {
-	// Some of what we have in the $search array may not be needed, but let's be safe.
-	$search = array(
-		'@<script[^>]*?>.*?</script>@si',
-		'@<applet[^>]*?>.*?</applet>@si',
-		'@<object[^>]*?>.*?</object>@si',
-		'@<iframe[^>]*?>.*?</iframe>@si',
-		'@<style[^>]*?>.*?</style>@si',
-		'@<form[^>]*?>.*?</form>@si',
-		'@<[\/\!]*?[^<>]*?>@si',
-		'@&(?!(#[0-9]+|[a-z]+);)@si'
-	);
+	$value = preg_replace('@&(?!(#[0-9]+|[a-z]+);)@si', '', $value);
+	$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 
+	// This will strip new line characters if $strip_crlf is set to true.
 	if ($strip_crlf)
 	{
-		array_push($search, '@([\r\n])[\s]+@');
+		$value = preg_replace('@([\r\n])[\s]+@', '', $value);
 	}
-	$value = preg_replace($search, '', $value);
 
-	// Make sure we get everything..
-	$value = strip_tags($value);
+	$value = str_replace(array("\x0B", "\0"), '', $value);
 
 	return sc_clean($value);
 }
@@ -167,6 +157,11 @@ function sc_get_ip()
 	else if ($_SERVER['HTTP_FROM'])
 	{
 		$ip = $_SERVER['HTTP_FROM'];
+	}
+
+	if (!filter_var($ip, FILTER_VALIDATE_IP))
+	{
+		return '0.0.0.0';
 	}
 	return $ip;
 }
