@@ -145,7 +145,7 @@ if (!empty($_POST['submit'])) {
 	else {
 		require_once './src/sc/email.class.php';
 		$emailer = Mailer::getInstance();
-		$mailer->set_params(Config::WEBMASTER, $email, Config::SUBJECT);
+		$emailer->set_params(Config::WEBMASTER, $email, Config::SUBJECT);
 		$emailer->use_template([
 			'name'    => $name,
 			'email'   => $email,

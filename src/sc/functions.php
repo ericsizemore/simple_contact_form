@@ -151,19 +151,19 @@ function get_ip($trust_proxy_headers = false) {
 * @return integer
 */
 function has_gd() {
-	static $gd_version = 0;
+	static $gd_version;
 
 	if (Config::USE_CAPTCHA === false) {
 		return false;
 	}
 
-	if ($gd_version == 0)
-	{
+	if (is_null($gd_version)) {
 		if (!function_exists('gd_info') OR !function_exists('imagettftext')) {
 			$gd_version = 0;
 		}
 		else {
-			$gd_version = gd_info()['GD Version'];
+			preg_match('#\d+#', gd_info()['GD Version'], $matches);
+			$gd_version = $matches[0];
 		}
     }
 	return (bool)($gd_version > 0);

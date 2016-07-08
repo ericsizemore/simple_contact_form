@@ -26,7 +26,7 @@ session_start();
 
 define('IN_SC', true);
 
-require_once './src/sc/functions.php';
+require_once './src/sc/global.php';
 require_once './src/sc/captcha/captcha.class.php';
 
 if (!has_gd()) {
@@ -42,7 +42,7 @@ $fonts = [];
 
 $fontdir = dirname(__FILE__) . '/src/sc/captcha/fonts/';
 
-$tmpfonts = new GlobIterator("$fontdir*.ttf", FilesystemIterator::KEY_AS_FILENAME);
+$tmpfonts = new \GlobIterator("$fontdir*.ttf", \FilesystemIterator::KEY_AS_FILENAME);
 
 foreach ($tmpfonts AS $tmpfont) {
 	$fonts[] = str_replace($fontdir, '', $tmpfonts->key());
