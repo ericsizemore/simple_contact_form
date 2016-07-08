@@ -4,7 +4,7 @@
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
 * @link      http://www.secondversion.com/downloads/
-* @version   1.0.10
+* @version   2.0.0
 * @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
@@ -20,16 +20,16 @@
 *	You should have received a copy of the GNU General Public License along with 
 *	this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+namespace Esi\SimpleContact;
 
 session_start();
 
 define('IN_SC', true);
 
-require_once './sc_includes/sc_functions.php';
-require_once './sc_includes/sc_captcha/sc_captcha.class.php';
+require_once './src/sc/functions.php';
+require_once './src/sc/captcha/captcha.class.php';
 
-if (!sc_has_gd())
-{
+if (!has_gd()) {
 	exit;
 }
 
@@ -38,14 +38,13 @@ if (!sc_has_gd())
 * Determining the fonts this way will allow users to add their own fonts,
 * without having to edit this file..
 */
-$fonts = array();
+$fonts = [];
 
-$fontdir = dirname(__FILE__) . '/sc_includes/sc_captcha/sc_fonts/';
+$fontdir = dirname(__FILE__) . '/src/sc/captcha/fonts/';
 
 $tmpfonts = new GlobIterator("$fontdir*.ttf", FilesystemIterator::KEY_AS_FILENAME);
 
-foreach ($tmpfonts AS $tmpfont)
-{
+foreach ($tmpfonts AS $tmpfont) {
 	$fonts[] = str_replace($fontdir, '', $tmpfonts->key());
 }
 unset($tmpfonts);

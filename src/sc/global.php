@@ -4,7 +4,7 @@
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
 * @link      http://www.secondversion.com/downloads/
-* @version   1.0.10
+* @version   2.0.0
 * @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
@@ -20,53 +20,28 @@
 *	You should have received a copy of the GNU General Public License along with 
 *	this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+namespace Esi\SimpleContact;
 
-if (!defined('IN_SC'))
-{
+if (!defined('IN_SC')) {
 	die('You are not supposed to be here.');
 }
 
 // ################################################################
 // Error reporting
-error_reporting(E_ALL & ~E_NOTICE & ~8192);
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 // Check PHP version
-if (!version_compare(PHP_VERSION, '5.2', '>='))
+if (!version_compare(PHP_VERSION, '5.4', '>='))
 {
-	die('PHP 5.2 or greater is required, you are currently running PHP ' . PHP_VERSION);
+	die('PHP 5.4 or greater is required, you are currently running PHP ' . PHP_VERSION);
 }
 
 // Better to be safe than sorry... :)
-if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS']))
-{
+if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS'])) {
 	die('Request tainting attempted.');
 }
 
-// Reverse the effects of register_globals if neccessary.
-if (ini_get('register_globals') OR strtolower(ini_get('register_globals')) == 'on')
-{
-	$supers = array('_GET', '_POST', '_COOKIE', '_REQUEST', '_SERVER', '_SESSION', '_ENV', '_FILES');
-
-	if (!isset($_SESSION) OR !is_array($_SESSION))
-	{
-		$_SESSION = array();
-	}
-
-	foreach ($supers AS $arrayname)
-	{
-		foreach (array_keys($GLOBALS["$arrayname"]) AS $varname)
-		{
-			if (!in_array($varname, $supers))
-			{
-				$GLOBALS["$varname"] = NULL;
-				unset($GLOBALS["$varname"]);
-			}
-		}
-	}
-}
-
 // ################################################################
-
 // Include needed files
-require_once 'sc_config.php';
-require_once 'sc_functions.php';
+require_once 'config.php';
+require_once 'functions.php';

@@ -4,7 +4,7 @@
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
 * @link      http://www.secondversion.com/downloads/
-* @version   1.0.10
+* @version   2.0.0
 * @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
@@ -20,6 +20,7 @@
 *	You should have received a copy of the GNU General Public License along with 
 *	this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+namespace Esi\SimpleContact;
 
 /**
 * Based on PHPCaptcha 1.0.3

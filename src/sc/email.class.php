@@ -4,7 +4,7 @@
 * @author    Eric Sizemore <admin@secondversion.com>
 * @package   SV's Simple Contact
 * @link      http://www.secondversion.com/downloads/
-* @version   1.0.10
+* @version   2.0.0
 * @copyright (C) 2005 - 2016 Eric Sizemore
 * @license
 *
@@ -20,17 +20,16 @@
 *	You should have received a copy of the GNU General Public License along with 
 *	this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+namespace Esi\SimpleContact;
 
-if (!defined('IN_SC'))
-{
+if (!defined('IN_SC')) {
 	die('You are not supposed to be here.');
 }
 
 /**
 * Class to send email.
 */
-class emailer
-{
+class Mailer {
 	/**
 	* Class instance.
 	*
@@ -86,8 +85,7 @@ class emailer
 	* @param  void
 	* @return void
 	*/
-	private function __construct()
-	{
+	private function __construct() {
 		$this->host = preg_replace('#^www\.#', '', $_SERVER['SERVER_NAME']);
 		$this->extra_headers = '';
 	}
@@ -98,10 +96,8 @@ class emailer
 	* @param  void
 	* @return object
 	*/
-	public static function getInstance()
-	{
-		if (!self::$instance)
-		{
+	public static function getInstance() {
+		if (!self::$instance) {
 			self::$instance = new self();
 		}
 		return self::$instance;
@@ -119,8 +115,7 @@ class emailer
 	* @param  string  $subject  Subject of the email
 	* @return void
 	*/
-	public function set_params($to, $from, $subject)
-	{
+	public function set_params($to, $from, $subject) {
 		$this->to = trim($to);
 		$this->from = trim($from);
 		$this->from = (is_null($from)) ? "noreply@{$this->host}" : $this->from;
@@ -133,8 +128,7 @@ class emailer
 	* @param  string  $headers  Extra headers seperated by \n
 	* @return void
 	*/
-	public function extra_headers($headers = '')
-	{
+	public function extra_headers($headers = '') {
 		$this->extra_headers .= str_replace("\r\n", "\n", $headers);
 	}
 
@@ -145,27 +139,22 @@ class emailer
 	* @param  string  $tpl_file  Template filename
 	* @return void
 	*/
-	public function use_template($tpl_vars, $tpl_file)
-	{
-		if (!is_array($tpl_vars) OR count($tpl_vars) == 0)
-		{
-			trigger_error('emailer::use_template() - <code>$tpl_vars</code> must be an array, or is empty.', E_USER_ERROR);
+	public function use_template(array $tpl_vars, $tpl_file) {
+		if (count($tpl_vars) == 0) {
+			throw new \InvalidArgumentException(__CLASS__ . '\\use_template() - <code>$tpl_vars</code> is empty.');
 		}
 
-		if (!is_file($tpl_file))
-		{
-			trigger_error("emailer::use_template() - '<code>$tpl_file</code>' is not a file or does not exist.", E_USER_ERROR);
+		if (!is_file($tpl_file)) {
+			throw new \InvalidArgumentException(__CLASS__ . "\\use_template() - '<code>$tpl_file</code>' is not a file or does not exist.");
 		}
 
-		if (!($fp = @fopen($tpl_file, 'r')))
-		{
-			trigger_error("emailer::use_template() - Could not open template file: '<code>$tpl_file</code>'", E_USER_ERROR);
+		if (!($fp = @fopen($tpl_file, 'r'))) {
+			throw new \InvalidArgumentException(__CLASS__ . "\\use_template() - Could not open template file: '<code>$tpl_file</code>'");
 		}
 
 		$this->body = fread($fp, filesize($tpl_file));
 
-		foreach ($tpl_vars AS $var => $content)
-		{
+		foreach ($tpl_vars AS $var => $content) {
 			$this->body = str_replace('{' . $var . '}', $content, $this->body);
 		}
 		fclose($fp);
@@ -178,8 +167,7 @@ class emailer
 	* @param  void
 	* @return boolean  true if the email is sent, false if not.
 	*/
-	public function send()
-	{
+	public function send() {
 		$headers = "From: {$this->from}\n";
 		$headers .= "Reply-To: {$this->from}\n";
 		$headers .= "Return-Path: {$this->from}\n";
@@ -194,13 +182,11 @@ class emailer
 		$headers .= "X-Mailer: SV's Simple Contact Form via PHP/" . PHP_VERSION . "\n";
 		$headers .= "X-MimeOLE: Produced By SV's Simple Contact Form\n";
 
-		if ($this->extra_headers != '')
-		{
+		if ($this->extra_headers != '') {
 			$headers .= trim($this->extra_headers) . "\n";
 		}
 
-		if (@mail($this->to, $this->subject, $this->body, $headers))
-		{
+		if (@mail($this->to, $this->subject, $this->body, $headers)) {
 			return true;
 		}
 		return false;

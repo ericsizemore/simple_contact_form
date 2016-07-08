@@ -3,7 +3,7 @@
 * @author    Eric Sizemore &lt;admin@secondversion.com&gt;
 * @package   SV's Simple Contact
 * @link      http://www.secondversion.com/downloads/
-* @version   1.0.10
+* @version   2.0.0
 * @copyright &copy; 2005 - 2016 Eric Sizemore
 * @license
 *
@@ -29,5 +29,5 @@ site/design, or be used standalone.
 This script is designed to be integrated into an existing design or website. However,
 the included 'contact.php' has its own HTML/etc to be run standalone.
 <br /><br />
-Simply upload the script and edit the '/sc_includes/sc_config.php' file. This file holds 
+Simply upload the script and edit the '/src/sc/config.php' file. This file holds 
 several important options, they should be self explanatory (they are commented).
