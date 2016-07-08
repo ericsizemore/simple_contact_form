@@ -50,9 +50,10 @@ foreach ($tmpfonts AS $tmpfont) {
 unset($tmpfonts);
 
 // ################################################################
-$captcha = new captcha($fontdir, $fonts);
+$captcha = Captcha::getInstance();
+$captcha->init($fontdir, $fonts);
 $captcha->make_captcha();
-
-$_SESSION['sc_captcha'] = md5($captcha->code);
+$_SESSION['sc_captcha'] = md5($captcha->get_code());
+$captcha->output();
 
 session_write_close();
