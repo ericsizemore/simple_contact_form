@@ -1,25 +1,25 @@
 <?php
 
 /**
-* @author    Eric Sizemore <admin@secondversion.com>
-* @package   SV's Simple Contact
-* @link      http://www.secondversion.com/downloads/
-* @version   2.0.0
-* @copyright (C) 2005 - 2016 Eric Sizemore
-* @license
-*
-*	SV's Simple Contact is free software: you can redistribute it and/or modify
-*	it under the terms of the GNU General Public License as published by the 
-*	Free Software Foundation, either version 3 of the License, or (at your option) 
-*	any later version.
-*
-*	This program is distributed in the hope that it will be useful, but WITHOUT ANY 
-*	WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
-*	PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-*
-*	You should have received a copy of the GNU General Public License along with 
-*	this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * @author    Eric Sizemore <admin@secondversion.com>
+ * @package   SV's Simple Contact
+ * @link      http://www.secondversion.com/downloads/
+ * @version   2.0.1
+ * @copyright (C) 2005 - 2017 Eric Sizemore
+ * @license
+ *
+ *    SV's Simple Contact is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by the 
+ *    Free Software Foundation, either version 3 of the License, or (at your option) 
+ *    any later version.
+ *
+ *    This program is distributed in the hope that it will be useful, but WITHOUT ANY 
+ *    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ *    PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License along with 
+ *    this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 namespace Esi\SimpleContact;
 
 define('IN_SC', true);
@@ -41,7 +41,7 @@ session_start();
 <!--
 function sc_validate_form() {
 	var flag       = true;
-	var usecaptcha = '<?= (has_gd()) ? 1 : ''; ?>';
+	var usecaptcha = '<?= (hasGd()) ? 1 : ''; ?>';
 	var error_msg  = 'The following errors occurred:\n';
 	var sname      = document.getElementById('sender_name');
 	var semail     = document.getElementById('sender_email');
@@ -110,7 +110,7 @@ if (!empty($_POST['submit'])) {
 	$message = str_replace("\r\n", "\n", $_POST['sender_message']);
 	$message = wordwrap(sanitize($message, false), Config::WORD_WRAP);
 
-	if (has_gd()) {
+	if (hasGd()) {
 		$captcha = sanitize($_POST['captcha']);
 	}
 
@@ -124,7 +124,7 @@ if (!empty($_POST['submit'])) {
 		'message' => $message
 	];
 
-	if (empty($name) OR is_email_injection($name)) {
+	if (empty($name) OR isEmailInjection($name)) {
 		$result .= 'Your name is required, please go back and enter your name.';
 	}
 	else if (empty($email)) {
@@ -133,23 +133,23 @@ if (!empty($_POST['submit'])) {
 	else if (empty($message)) {
 		$result .= 'A message is required, please go back and enter a message.';
 	}
-	else if (!is_email($email) OR is_email_injection($email)) {
+	else if (!isEmail($email) OR isEmailInjection($email)) {
 		$result .= 'Email is invalid. Please try again.';
 	}
-	else if (is_spam($message)) {
+	else if (isSpam($message)) {
 		$result .= 'Sorry, but your message seemed a bit like spam.';
 	}
-	else if (has_gd() AND md5($captcha) != $_SESSION['sc_captcha']) {
+	else if (hasGd() AND md5($captcha) != $_SESSION['sc_captcha']) {
 		$result .= 'Sorry, but the code you entered is incorrect. Please try again.';
 	}
 	else {
 		require_once './src/sc/email.class.php';
 		$emailer = Mailer::getInstance();
-		$emailer->set_params(Config::WEBMASTER, $email, Config::SUBJECT);
-		$emailer->use_template([
+		$emailer->setParams(Config::WEBMASTER, $email, Config::SUBJECT);
+		$emailer->useTemplate([
 			'name'    => $name,
 			'email'   => $email,
-			'ip'      => get_ip(),
+			'ip'      => getIp(),
 			'message' => $message
 		], 'src/sc/email.tpl');
 
@@ -196,7 +196,7 @@ else
 		<td valign="top"><label for="sender_message">Message:*</label></td>
 		<td><textarea name="sender_message" id="sender_message" rows="4" cols="35"><?php echo $_SESSION['sc_form']['message']; ?></textarea></td>
 	</tr>
-<?php if (has_gd()) { ?>
+<?php if (hasGd()) { ?>
 	<tr>
 		<td>&nbsp;</td>
 		<td>

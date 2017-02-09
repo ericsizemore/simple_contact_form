@@ -1,364 +1,380 @@
 <?php
 
 /**
-* @author    Eric Sizemore <admin@secondversion.com>
-* @package   SV's Simple Contact
-* @link      http://www.secondversion.com/downloads/
-* @version   2.0.0
-* @copyright (C) 2005 - 2016 Eric Sizemore
-* @license
-*
-*	SV's Simple Contact is free software: you can redistribute it and/or modify
-*	it under the terms of the GNU General Public License as published by the 
-*	Free Software Foundation, either version 3 of the License, or (at your option) 
-*	any later version.
-*
-*	This program is distributed in the hope that it will be useful, but WITHOUT ANY 
-*	WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
-*	PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-*
-*	You should have received a copy of the GNU General Public License along with 
-*	this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * @author    Eric Sizemore <admin@secondversion.com>
+ * @package   SV's Simple Contact
+ * @link      http://www.secondversion.com/downloads/
+ * @version   2.0.1
+ * @copyright (C) 2005 - 2017 Eric Sizemore
+ * @license
+ *
+ *    SV's Simple Contact is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by the 
+ *    Free Software Foundation, either version 3 of the License, or (at your option) 
+ *    any later version.
+ *
+ *    This program is distributed in the hope that it will be useful, but WITHOUT ANY 
+ *    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ *    PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License along with 
+ *    this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 namespace Esi\SimpleContact;
 
 /**
-* Based on PHPCaptcha 1.0.3
-*
-* @link http://www.phpcaptcha.org Securimage PHP CAPTCHA
-* @copyright 2007 Drew Phillips <drew@drew-phillips.com>
-*/
-
+ * Based on PHPCaptcha 1.0.3
+ *
+ * @link http://www.phpcaptcha.org Securimage PHP CAPTCHA
+ * @copyright 2007 Drew Phillips <drew@drew-phillips.com>
+ */
 if (!defined('IN_SC')) {
-	die('You are not supposed to be here.');
+    die('You are not supposed to be here.');
 }
 
-// Captcha class...
-class Captcha {
-	const JPEG = 1;
-	const PNG  = 2;
-	const GIF  = 3;
+/**
+ *
+ */
+class Captcha
+{
+    /**
+    *
+    */
+    const JPEG = 1;
+    const PNG  = 2;
+    const GIF  = 3;
 
-	/**
-	* Class instance.
-	*
-	* @var object
-	*/
-	private static $instance;
+    /**
+    * Class instance.
+    *
+    * @var object
+    */
+    private static $instance;
 
-	/**
-	* The desired width of the CAPTCHA image.
-	*
-	* @var integer
-	*/
-	private $image_width = 175;
+    /**
+    * The desired width of the CAPTCHA image.
+    *
+    * @var integer
+    */
+    private $image_width = 175;
 
-	/**
-	* The desired width of the CAPTCHA image.
-	*
-	* @var integer
-	*/
-	private $image_height = 45;
+    /**
+    * The desired width of the CAPTCHA image.
+    *
+    * @var integer
+    */
+    private $image_height = 45;
 
-	/**
-	* The image format for output.
-	* Valid options: SC_IMAGE_PNG, SC_IMAGE_JPG, or SC_IMAGE_GIF
-	*
-	* @var integer
-	*/
-	public $image_type = self::PNG;
+    /**
+    * The image format for output.
+    * Valid options: SC_IMAGE_PNG, SC_IMAGE_JPG, or SC_IMAGE_GIF
+    *
+    * @var integer
+    */
+    public $image_type = self::PNG;
 
-	/**
-	* The length of the code to generate.
-	*
-	* @var integer
-	*/
-	private $code_length = 5;
+    /**
+    * The length of the code to generate.
+    *
+    * @var integer
+    */
+    private $code_length = 5;
 
-	/**
-	* The character set for individual characters in the image.
-	* Advised that you do not alter this.
-	*
-	* @var string
-	*/
-	private $charset = 'ABCDEFGHKLMNPRSTUVWYZ23456789';
+    /**
+    * The character set for individual characters in the image.
+    * Advised that you do not alter this.
+    *
+    * @var string
+    */
+    private $charset = 'ABCDEFGHKLMNPRSTUVWYZ23456789';
 
-	/**
-	* The path to the TTF font file to load.
-	*
-	* @var string
-	*/
-	private $ttf_file = '';
+    /**
+    * The path to the TTF font file to load.
+    *
+    * @var string
+    */
+    private $ttf_file = '';
 
-	/**
-	* The font size.
-	* Depending on your version of GD, this should be specified as the pixel
-	* size (GD1) or point size (GD2).
-	*
-	* @var integer
-	*/
-	private $font_size = 26;
+    /**
+    * The font size.
+    * Depending on your version of GD, this should be specified as the pixel
+    * size (GD1) or point size (GD2).
+    *
+    * @var integer
+    */
+    private $font_size = 26;
 
-	/**
-	* The minimum angle in degrees, with 0 degrees being left-to-right reading text.
-	* Higher values represent a counter-clockwise rotation.
-	* For example, a value of 90 would result in bottom-to-top reading text.
-	*
-	* @var integer
-	*/
-	private $text_angle_minimum = -10;
+    /**
+    * The minimum angle in degrees, with 0 degrees being left-to-right reading text.
+    * Higher values represent a counter-clockwise rotation.
+    * For example, a value of 90 would result in bottom-to-top reading text.
+    *
+    * @var integer
+    */
+    private $text_angle_minimum = -10;
 
-	/**
-	* The minimum angle in degrees, with 0 degrees being left-to-right reading text.
-	* Higher values represent a counter-clockwise rotation.
-	* For example, a value of 90 would result in bottom-to-top reading text.
-	*
-	* @var integer
-	*/
-	private $text_angle_maximum = 10;
+    /**
+    * The minimum angle in degrees, with 0 degrees being left-to-right reading text.
+    * Higher values represent a counter-clockwise rotation.
+    * For example, a value of 90 would result in bottom-to-top reading text.
+    *
+    * @var integer
+    */
+    private $text_angle_maximum = 10;
 
-	/**
-	* The X-Position on the image where letter drawing will begin.
-	* This value is in pixels from the left side of the image.
-	*
-	* @var integer
-	*/
-	private $text_x_start = 8;
+    /**
+    * The X-Position on the image where letter drawing will begin.
+    * This value is in pixels from the left side of the image.
+    *
+    * @var integer
+    */
+    private $text_x_start = 8;
 
-	/**
-	* Letters can be spaced apart at random distances.
-	* This is the minimum distance between two letters.
-	* This should be at least as wide as a font character.
-	* Small values can cause letters to be drawn over eachother.
-	*
-	* @var integer
-	*/
-	private $text_minimum_distance = 30;
+    /**
+    * Letters can be spaced apart at random distances.
+    * This is the minimum distance between two letters.
+    * This should be at least as wide as a font character.
+    * Small values can cause letters to be drawn over eachother.
+    *
+    * @var integer
+    */
+    private $text_minimum_distance = 30;
 
-	/**
-	* Letters can be spaced apart at random distances.
-	* This is the maximum distance between two letters.
-	* This should be at least as wide as a font character.
-	* Small values can cause letters to be drawn over eachother.
-	*
-	* @var integer
-	*/
-	private $text_maximum_distance = 35;
+    /**
+    * Letters can be spaced apart at random distances.
+    * This is the maximum distance between two letters.
+    * This should be at least as wide as a font character.
+    * Small values can cause letters to be drawn over eachother.
+    *
+    * @var integer
+    */
+    private $text_maximum_distance = 35;
 
-	/**
-	* The text colors to use for drawing characters.
-	*
-	* @var array
-	*/
-	private $text_color = ['#ff0000', '#095DC3', '#F5452E', '#7E17FD', '#1A8CFF', '#3333FF'];
+    /**
+    * The text colors to use for drawing characters.
+    *
+    * @var array
+    */
+    private $text_color = ['#ff0000', '#095DC3', '#F5452E', '#7E17FD', '#1A8CFF', '#3333FF'];
 
-	// END USER CONFIGURATION
-	/**
-	* The gd image resource.
-	*
-	* @var resource
-	*/
-	private $im;
+    // END USER CONFIGURATION
+    /**
+    * The gd image resource.
+    *
+    * @var resource
+    */
+    private $im;
 
-	/**
-	* The code generated by the script.
-	*
-	* @var string
-	*/
-	private $code;
+    /**
+    * The code generated by the script.
+    *
+    * @var string
+    */
+    private $code;
 
-	/**
-	* Class constructor.
-	*/
-	private function __construct() {}
+    /**
+    * Class constructor.
+    */
+    private function __construct()
+    {
+        //
+    }
 
-	/**
-	* Creates an instance of the class.
-	*
-	* @param  void
-	* @return object
-	*/
-	public static function getInstance() {
-		if (!self::$instance) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
+    /**
+    * Creates an instance of the class.
+    *
+    * @param  void
+    * @return object
+    */
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
-	/**
-	*/
-	private function __clone() {}
+    /**
+    */
+    private function __clone() {}
 
-	/**
-	*/
-	public function init($ttf_folder, array $ttf_files = [])
-	{
-		if (!is_dir($ttf_folder)) {
-			throw new \InvalidArgumentException(__CLASS__ . '\\init() - TrueTypeFont directory does not exist!');
-		}
+    /**
+    */
+    public function init($ttf_folder, array $ttf_files = [])
+    {
+        if (!is_dir($ttf_folder)) {
+            throw new \InvalidArgumentException(__CLASS__ . '\\init() - TrueTypeFont directory does not exist!');
+        }
 
-		if (!count($ttf_files)) {
-			throw new \InvalidArgumentException(__CLASS__ . '\\init() - We need TrueTypeFont fonts to make an image, where are they!?');
-		}
-		$this->ttf_file = $ttf_folder . $ttf_files[array_rand($ttf_files)];
-	}
+        if (!count($ttf_files)) {
+            throw new \InvalidArgumentException(__CLASS__ . '\\init() - We need TrueTypeFont fonts to make an image, where are they!?');
+        }
+        $this->ttf_file = $ttf_folder . $ttf_files[array_rand($ttf_files)];
+    }
 
-	/**
-	* Generate and output the image.
-	*/
-	public function make_captcha() {
-		$this->im = imagecreate($this->image_width, $this->image_height);
-		$bgcolor = imagecolorallocate($this->im, 255, 255, 255);
-		$cslen = strlen($this->charset);
+    /**
+    * Generate and output the image.
+    */
+    public function make_captcha()
+    {
+        $this->im = imagecreate($this->image_width, $this->image_height);
+        $bgcolor = imagecolorallocate($this->im, 255, 255, 255);
+        $cslen = strlen($this->charset);
 
-		$this->code = '';
+        $this->code = '';
 
-		for ($i = 1; $i <= $this->code_length; ++$i)
-		{
-			$this->code .= strtoupper($this->charset{mt_rand(0, $cslen - 1)});
-		}
+        for ($i = 1; $i <= $this->code_length; ++$i)
+        {
+            $this->code .= strtoupper($this->charset{mt_rand(0, $cslen - 1)});
+        }
 
-		self::draw_lines();
-		self::draw_word();
-		self::arc_lines();
-	}
+        self::draw_lines();
+        self::draw_word();
+        self::arc_lines();
+    }
 
-	/**
-	*/
-	public function get_code() {
-		return $this->code;
-	}
+    /**
+    */
+    public function get_code()
+    {
+        return $this->code;
+    }
 
-	/**
-	* Draw arced lines over the text.
-	*/
-	private function arc_lines() {
-		imagesetthickness($this->im, 1);
+    /**
+    * Draw arced lines over the text.
+    */
+    private function arc_lines()
+    {
+        imagesetthickness($this->im, 1);
 
-		$linecolor = self::random_color();
-		$xpos = $this->text_x_start + ($this->font_size * 2) + mt_rand(-5, 5);
-		$width = ($this->image_width / 2.66) + mt_rand(3, 10);
-		$height = ($this->font_size * 2.14) - mt_rand(3, 10);
+        $linecolor = self::random_color();
+        $xpos = $this->text_x_start + ($this->font_size * 2) + mt_rand(-5, 5);
+        $width = ($this->image_width / 2.66) + mt_rand(3, 10);
+        $height = ($this->font_size * 2.14) - mt_rand(3, 10);
 
-		if (mt_rand(0, 100) % 2 == 0) {
-			$start = mt_rand(0, 66);
-			$ypos = ($this->image_height / 2) - mt_rand(5, 15);
-			$xpos += mt_rand(5, 15);
-		}
-		else {
-			$start = mt_rand(180, 246);
-			$ypos = ($this->image_height / 2) + mt_rand(5, 15);
-		}
+        if (mt_rand(0, 100) % 2 == 0) {
+            $start = mt_rand(0, 66);
+            $ypos = ($this->image_height / 2) - mt_rand(5, 15);
+            $xpos += mt_rand(5, 15);
+        }
+        else {
+            $start = mt_rand(180, 246);
+            $ypos = ($this->image_height / 2) + mt_rand(5, 15);
+        }
 
-		$end = $start + mt_rand(75, 110);
+        $end = $start + mt_rand(75, 110);
 
-		imagearc($this->im, $xpos, $ypos, $width, $height, $start, $end, $linecolor);
+        imagearc($this->im, $xpos, $ypos, $width, $height, $start, $end, $linecolor);
 
-		$linecolor = self::random_color();
+        $linecolor = self::random_color();
 
-		if (mt_rand(1, 75) % 2 == 0) {
-			$start = mt_rand(45, 111);
-			$ypos = ($this->image_height / 2) - mt_rand(5, 15);
-			$xpos += mt_rand(5, 15);
-		}
-		else {
-			$start = mt_rand(200, 250);
-			$ypos = ($this->image_height / 2) + mt_rand(5, 15);
-		}
-		$end = $start + mt_rand(75, 100);
-		imagearc($this->im, ($this->image_width * .75), $ypos, $width, $height, $start, $end, $linecolor);
-	}
+        if (mt_rand(1, 75) % 2 == 0) {
+            $start = mt_rand(45, 111);
+            $ypos = ($this->image_height / 2) - mt_rand(5, 15);
+            $xpos += mt_rand(5, 15);
+        }
+        else {
+            $start = mt_rand(200, 250);
+            $ypos = ($this->image_height / 2) + mt_rand(5, 15);
+        }
+        $end = $start + mt_rand(75, 100);
+        imagearc($this->im, ($this->image_width * .75), $ypos, $width, $height, $start, $end, $linecolor);
+    }
 
-	/**
-	* Draw lines on the image.
-	*/
-	private function draw_lines() {
-		$linecolor = self::random_color();
-		imagesetthickness($this->im, 1);
+    /**
+    * Draw lines on the image.
+    */
+    private function draw_lines()
+    {
+        $linecolor = self::random_color();
+        imagesetthickness($this->im, 1);
 
-		$rand_distance = mt_rand(15, 20);
+        $rand_distance = mt_rand(15, 20);
 
-		// Vertical lines
-		for ($x = 1; $x < $this->image_width; $x += $rand_distance) {
-			imageline($this->im, $x, 0, $x, $this->image_height, $linecolor);
-		}
+        // Vertical lines
+        for ($x = 1; $x < $this->image_width; $x += $rand_distance) {
+            imageline($this->im, $x, 0, $x, $this->image_height, $linecolor);
+        }
 
-		// Horizontal lines
-		for ($y = 11; $y < $this->image_height; $y += $rand_distance) {
-			imageline($this->im, 0, $y, $this->image_width, $y, $linecolor);
-		}
+        // Horizontal lines
+        for ($y = 11; $y < $this->image_height; $y += $rand_distance) {
+            imageline($this->im, 0, $y, $this->image_width, $y, $linecolor);
+        }
 
-		// Angled lines
-		for ($x = -($this->image_height); $x < $this->image_width; $x += $rand_distance) {
-			imageline($this->im, $x, 0, $x + $this->image_height, $this->image_height, $linecolor);
-		}
+        // Angled lines
+        for ($x = -($this->image_height); $x < $this->image_width; $x += $rand_distance) {
+            imageline($this->im, $x, 0, $x + $this->image_height, $this->image_height, $linecolor);
+        }
 
-		for ($x = $this->image_width + $this->image_height; $x > 0; $x -= $rand_distance) {
-			imageline($this->im, $x, 0, $x - $this->image_height, $this->image_height, $linecolor);
-		}
-	}
+        for ($x = $this->image_width + $this->image_height; $x > 0; $x -= $rand_distance) {
+            imageline($this->im, $x, 0, $x - $this->image_height, $this->image_height, $linecolor);
+        }
+    }
 
-	/**
-	* Draw the CAPTCHA code over the image
-	*/
-	private function draw_word() {
-		$x = $this->text_x_start;
-		$strlen = strlen($this->code);
-		$y_min = ($this->image_height / 2) + ($this->font_size / 2) - 2;
-		$y_max = ($this->image_height / 2) + ($this->font_size / 2) + 2;
+    /**
+    * Draw the CAPTCHA code over the image
+    */
+    private function draw_word()
+    {
+        $x = $this->text_x_start;
+        $strlen = strlen($this->code);
+        $y_min = ($this->image_height / 2) + ($this->font_size / 2) - 2;
+        $y_max = ($this->image_height / 2) + ($this->font_size / 2) + 2;
 
-		for ($i = 0; $i < $strlen; ++$i) {
-			$font_color = self::random_color();
-			$angle = mt_rand($this->text_angle_minimum, $this->text_angle_maximum);
-			$y = mt_rand($y_min, $y_max);
-			imagettftext($this->im, $this->font_size, $angle, $x, $y, $font_color, $this->ttf_file, $this->code{$i});
-			$x += mt_rand($this->text_minimum_distance, $this->text_maximum_distance);
-		}
-	}
+        for ($i = 0; $i < $strlen; ++$i) {
+            $font_color = self::random_color();
+            $angle = mt_rand($this->text_angle_minimum, $this->text_angle_maximum);
+            $y = mt_rand($y_min, $y_max);
+            imagettftext($this->im, $this->font_size, $angle, $x, $y, $font_color, $this->ttf_file, $this->code{$i});
+            $x += mt_rand($this->text_minimum_distance, $this->text_maximum_distance);
+        }
+    }
 
-	/**
-	* Allocates a random color for the font, lines, etc.
-	*/
-	private function random_color() {
-		shuffle($this->text_color);
-		$color = $this->text_color[array_rand($this->text_color)];
-		$color = imagecolorallocate($this->im, hexdec(substr($color, 1, 2)), hexdec(substr($color, 3, 2)), hexdec(substr($color, 5, 2)));
-		return $color;
-	}
+    /**
+    * Allocates a random color for the font, lines, etc.
+    */
+    private function random_color()
+    {
+        shuffle($this->text_color);
+        $color = $this->text_color[array_rand($this->text_color)];
+        $color = imagecolorallocate($this->im, hexdec(substr($color, 1, 2)), hexdec(substr($color, 3, 2)), hexdec(substr($color, 5, 2)));
+        return $color;
+    }
 
-	/**
-	* Output image to the browser.
-	*/
-	public function output() {
-		if (!is_resource($this->im)) {
-			exit;
-		}
+    /**
+    * Output image to the browser.
+    */
+    public function output()
+    {
+        if (!is_resource($this->im)) {
+            exit;
+        }
 
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-		header('Cache-Control: no-store, no-cache, must-revalidate');
-		header('Cache-Control: post-check=0, pre-check=0', false);
-		header('Pragma: no-cache');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
 
-		// Smooth
-		imagefilter($this->im, IMG_FILTER_SMOOTH, 50);
+        // Smooth
+        imagefilter($this->im, IMG_FILTER_SMOOTH, 50);
 
-		// Output
-		switch ($this->image_type) {
-			case self::JPEG:
-				header('Content-Type: image/jpeg');
-				imagejpeg($this->im, NULL, 90);
-				break;
-			case self::GIF:
-				header('Content-Type: image/gif');
-				imagegif($this->im);
-				break;
-			case self::PNG:
-			default:
-				header('Content-Type: image/png');
-				imagepng($this->im);
-				break;
-		}
-		imagedestroy($this->im);
-	}
+        // Output
+        switch ($this->image_type) {
+            case self::JPEG:
+                header('Content-Type: image/jpeg');
+                imagejpeg($this->im, NULL, 90);
+                break;
+            case self::GIF:
+                header('Content-Type: image/gif');
+                imagegif($this->im);
+                break;
+            case self::PNG:
+            default:
+                header('Content-Type: image/png');
+                imagepng($this->im);
+                break;
+        }
+        imagedestroy($this->im);
+    }
 }
