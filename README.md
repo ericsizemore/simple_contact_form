@@ -1,3 +1,6 @@
+# No Longer Maintained
+#### This repository is being archived and the project is no longer maintained (I've not updated or made a release in several years). There are many other contact form scripts out there more advanced and more modern than this one.
+
 <pre>
 /**
 * @author    Eric Sizemore &lt;admin@secondversion.com&gt;
